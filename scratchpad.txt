@@ -1,0 +1,19 @@
+population variables:
+  size
+  average house hold household size
+  area (square miles)
+  conectivity (averange contacts perday not including household members)
+  percent infected
+  percent isolated
+  rate of spread
+  percent that recover
+  percent that die
+  length of infection
+
+individual variables:
+  infected (True False)
+  household size
+  isolated (True False)
+
+
+all population percents are normally distributed across population

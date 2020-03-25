@@ -24,7 +24,6 @@ class Population(object):
         self.len_i = loi
         self.end_time = len_sim
         self.c_time = 0
-        self.movment_array = []
 
 
         self.individuals = []
@@ -49,11 +48,15 @@ class Population(object):
                 self.individuals.append(Person(i, False, True, movement[i]))
 
         for days in range(self.end_time):
-            obj_day_stops = []
             for obj in range(0, len(self.individuals)):
-                obj_day_stops.append([obj,self.individuals[obj].movement(area1[0], area1[1])])
-            self.movment_array.append(obj_day_stops)
-            print(self.movment_array)
+                self.individuals[obj].movement(area1[0], area1[1]) #loop runs once and generates all of the movement
+            #self.movment_array.append(obj_day_stops)
+            #print(self.movment_array)
+
+        #sort each obj.tot_move by time
+        #check for similiraties within tollerances
+        #if tuch contegen then toggle infection status
+        #dont forget to cure the niggas after 14 days
             self.contact()
 
 
@@ -76,11 +79,12 @@ class Person(object):
         self.infected = infected
         #self.hh_size = hh_size
         self.isolated = isolated
+        self.tot_mov = []
 
     def movement(self, size1, size2):
         stop_l = []
         for stop in range(int(self.num_stops)):
-            stop_l.append([random.randint(0,size1),random.randint(0,size2),24/int(self.num_stops)*stop])
+            self.tot_mov.append([random.randint(0,size1),random.randint(0,size2),24/int(self.num_stops)*stop])
 
         return stop_l
         print(self.day_stops)

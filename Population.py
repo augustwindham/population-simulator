@@ -52,13 +52,13 @@ class Population(object):
 
 
 
-        
+
         for days in range(0,self.end_time):
             for hour in range(0,24):
                 for obj in self.individuals:
                     p = np.random.choice([0, 1], size=1, p=[1-obj.p_of_stop, obj.p_of_stop])
                     #each hour 1 or 0 for stop or no stop with given independent probibility
-                    print(p)
+                    #print(p)
                     if p == 1:
                         obj.movment()
 
@@ -66,17 +66,20 @@ class Population(object):
 
             for obj in self.individuals: #check for new infections//intersecton
                 if obj.current_loc not in [x[1] for x in loc_list]:
-                    loc_list.append(obj, obj.current_loc)
+                    loc_list.append([obj, obj.current_loc])
                 else:
-                    if obj.infected == False and #loc_list.index(--).infected == False:
+                    if obj.infected == False and loc_list[loc_list.index(obj.current_loc)][0].infected == False:
                         pass
 
-                    elif obj.infected == False and #loc_list.index(--).infected == True:
+                    elif obj.infected == False and loc_list[loc_list.index(obj.current_loc)][0].infected == True:
                         obj.infected = True
-                    elif obj.infected == True and #loc_list.index(--).infected == False:
-                        #loc_list.index(--).infected == True
+                        obj.date_i = days
+                    elif obj.infected == True and loc_list[loc_list.index(obj.current_loc)][0].infected == False:
+                        loc_list[loc_list.index(obj.current_loc)][0].infected = True
+                        loc_list[loc_list.index(obj.current_loc)][0].date_i = days
                     else:
                         pass
+            print('day over')
 
 
             #plot
@@ -85,7 +88,7 @@ class Population(object):
         #dont forget to cure after 14 days
 
 
-    def contact(self):
+    def update_infected_timers(self,obj):
         pass
 
         #individuall objects created. need to model daily individual motion in movement function
@@ -116,11 +119,4 @@ class Person(object):
 
 
 
-
-
-
-
-
-
-
-Houston = Population(10, 4, (5,5), 5, .2, .70, .05, .02, 14, 1)
+Houston = Population(10, 4, (5,5), 5, .2, .70, .05, .02, 14, 7)

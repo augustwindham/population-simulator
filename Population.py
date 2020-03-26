@@ -23,13 +23,13 @@ class Population(object):
         self.p_die = p_die
         self.len_i = loi
         self.end_time = len_sim
-        self.c_time = 0
+        self.day_dat = []
 
 
         self.individuals = []
         inf = random.sample(range(self.pop),int(self.pop*self.p_infected))
         isolated = random.sample(range(self.pop), int(self.pop*self.p_isolated))
-        movement = np.random.random_integers(0,8+1,self.pop)
+        movement = np.random.random_integers(0,24, self.pop)
         #print(movement)
         self.test_time  = 14
         for i in range(self.pop):
@@ -46,18 +46,43 @@ class Population(object):
                 self.individuals.append(Person(i, False, False, movement[i]))
             else:
                 self.individuals.append(Person(i, False, True, movement[i]))
+        for obj in self.individuals:
+            obj.current_loc = [random.randint(0,area1[0]),random.randint(0,area1[1])]
+            #plot the objects
 
-        for days in range(self.end_time):
-            for obj in range(0, len(self.individuals)):
-                self.individuals[obj].movement(area1[0], area1[1]) #loop runs once and generates all of the movement
-            #self.movment_array.append(obj_day_stops)
-            #print(self.movment_array)
 
-        #sort each obj.tot_move by time
-        #check for similiraties within tollerances
-        #if tuch contegen then toggle infection status
-        #dont forget to cure the niggas after 14 days
-            self.contact()
+
+        
+        for days in range(0,self.end_time):
+            for hour in range(0,24):
+                for obj in self.individuals:
+                    p = np.random.choice([0, 1], size=1, p=[1-obj.p_of_stop, obj.p_of_stop])
+                    #each hour 1 or 0 for stop or no stop with given independent probibility
+                    print(p)
+                    if p == 1:
+                        obj.movment()
+
+            loc_list = []
+
+            for obj in self.individuals: #check for new infections//intersecton
+                if obj.current_loc not in [x[1] for x in loc_list]:
+                    loc_list.append(obj, obj.current_loc)
+                else:
+                    if obj.infected == False and #loc_list.index(--).infected == False:
+                        pass
+
+                    elif obj.infected == False and #loc_list.index(--).infected == True:
+                        obj.infected = True
+                    elif obj.infected == True and #loc_list.index(--).infected == False:
+                        #loc_list.index(--).infected == True
+                    else:
+                        pass
+
+
+            #plot
+
+
+        #dont forget to cure after 14 days
 
 
     def contact(self):
@@ -70,27 +95,32 @@ class Population(object):
 
 class Person(object):
     """docstring for Person."""
-
+    len = 1
     def __init__(self, id,  infected, isolated, stops, date_i = ''):
         super(Person, self).__init__()
         self.date_i = date_i
-        self.num_stops = stops
+        self.p_of_stop = stops/96
         self.id = id
         self.infected = infected
         #self.hh_size = hh_size
         self.isolated = isolated
-        self.tot_mov = []
+        self.current_loc = ''
 
-    def movement(self, size1, size2):
-        stop_l = []
-        for stop in range(int(self.num_stops)):
-            self.tot_mov.append([random.randint(0,size1),random.randint(0,size2),24/int(self.num_stops)*stop])
+    def movment(self):
+        new_loc = [random.randint(0,area1[0]),random.randint(0,area1[1])]
 
-        return stop_l
-        print(self.day_stops)
+        while new_loc == self.current_loc:
+            new_loc = [random.randint(0,area1[0]),random.randint(0,area1[1])]
 
-
+        self.current_loc = new_loc
 
 
 
-Houston = Population(5000, 4, (100,100), 5, .005, .70, .05, .02, 14, 1)
+
+
+
+
+
+
+
+Houston = Population(10, 4, (5,5), 5, .2, .70, .05, .02, 14, 1)
